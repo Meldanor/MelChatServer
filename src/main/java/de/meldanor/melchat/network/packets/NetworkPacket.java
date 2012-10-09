@@ -80,7 +80,6 @@ public abstract class NetworkPacket {
      *            The Buffer containing the byte string
      */
     public void extractData(ByteBuffer buffer) {
-        buffer.rewind();
         onExtractData(buffer);
         buffer.clear();
     }

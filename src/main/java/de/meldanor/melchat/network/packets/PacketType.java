@@ -23,25 +23,31 @@ import java.util.Map;
 
 public enum PacketType {
 
-    MESSAGE(MessagePacket.class);
+    MESSAGE((byte) 1, MessagePacket.class);
 
     private Class<? extends NetworkPacket> clazz;
+    private byte packedID;
 
-    private PacketType(Class<? extends NetworkPacket> clazz) {
+    private PacketType(byte packetID, Class<? extends NetworkPacket> clazz) {
+        this.packedID = packetID;
         this.clazz = clazz;
     }
 
-    private static Map<Class<? extends NetworkPacket>, Integer> mapByClazz;
+    public byte getPackedID() {
+        return packedID;
+    }
+
+    private final static Map<Class<? extends NetworkPacket>, Byte> mapByClazz;
 
     static {
-        mapByClazz = new HashMap<Class<? extends NetworkPacket>, Integer>();
+        mapByClazz = new HashMap<Class<? extends NetworkPacket>, Byte>();
 
         for (PacketType entity : values()) {
-            mapByClazz.put(entity.clazz, entity.ordinal());
+            mapByClazz.put(entity.clazz, entity.packedID);
         }
     }
 
-    public static int getPacketID(NetworkPacket packet) {
+    public static byte getPacketID(NetworkPacket packet) {
         return mapByClazz.get(packet.getClass());
     }
 }
