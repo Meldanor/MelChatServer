@@ -22,8 +22,8 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
 import de.meldanor.melchat.exception.TextToLargeException;
-import de.meldanor.melchat.packets.MessagePacket;
-import de.meldanor.melchat.packets.NetworkPacket;
+import de.meldanor.melchat.network.packets.MessagePacket;
+import de.meldanor.melchat.network.packets.NetworkPacket;
 
 public class MelChatCore {
 

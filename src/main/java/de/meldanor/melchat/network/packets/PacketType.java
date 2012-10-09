@@ -16,7 +16,7 @@
  * along with MelChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.meldanor.melchat.packets;
+package de.meldanor.melchat.network.packets;
 
 import java.util.HashMap;
 import java.util.Map;
