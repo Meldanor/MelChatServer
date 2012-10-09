@@ -18,13 +18,7 @@
 
 package de.meldanor.melchat.core;
 
-public class ChatServer implements Runnable {
-
-    private int port;
-
-    public ChatServer(int port) {
-        this.port = port;
-    }
+public class ChatClient implements Runnable {
 
     @Override
     public void run() {

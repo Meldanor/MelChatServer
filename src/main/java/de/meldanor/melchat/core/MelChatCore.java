@@ -19,13 +19,50 @@
 package de.meldanor.melchat.core;
 
 import java.nio.charset.Charset;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 public class MelChatCore {
 
     public final static Charset CHARSET = Charset.forName("UTF-8");
 
+    private final static int SERVER_OPTION = 1;
+    private final static int CLIENT_OPTION = 2;
+
     public static void main(String[] args) {
+        System.out.println("---------------");
+        System.out.println("----MelChat----");
+        System.out.println("---------------");
+
+        System.out.println();
+
+        boolean menu = true;
+        do {
+            System.out.println("(" + SERVER_OPTION + ") - Start chat server");
+            System.out.println("(" + CLIENT_OPTION + ") - Start chat client");
+
+            Scanner scanner = new Scanner(System.in);
+
+            try {
+                int i = scanner.nextInt();
+                if (i == SERVER_OPTION) {
+                    System.out.println("Start Server...");
+                    menu = false;
+                } else if (i == CLIENT_OPTION) {
+                    System.out.println("Start Client...");
+                    menu = false;
+                } else {
+                    System.out.println("Wrong input!");
+                    System.out.println("---------------");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Wrong input!");
+                System.out.println("---------------");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } while (menu);
 
     }
-
 }
