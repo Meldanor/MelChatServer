@@ -36,7 +36,7 @@ public class MelChatCore {
 
         System.out.println();
 
-        boolean menu = true;
+        boolean menu = false;
         do {
             System.out.println("(" + SERVER_OPTION + ") - Start chat server");
             System.out.println("(" + CLIENT_OPTION + ") - Start chat client");
@@ -45,15 +45,18 @@ public class MelChatCore {
 
             try {
                 int i = scanner.nextInt();
-                if (i == SERVER_OPTION) {
-                    System.out.println("Start Server...");
-                    menu = false;
-                } else if (i == CLIENT_OPTION) {
-                    System.out.println("Start Client...");
-                    menu = false;
-                } else {
-                    System.out.println("Wrong input!");
-                    System.out.println("---------------");
+                switch (i) {
+                    case SERVER_OPTION :
+                        System.out.println("Start Server...");
+                        break;
+                    case CLIENT_OPTION :
+                        System.out.println("Start Client...");
+                        break;
+                    default :
+                        System.out.println("Wrong input!");
+                        System.out.println("---------------");
+                        menu = true;
+                        break;
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Wrong input!");
