@@ -30,6 +30,19 @@ public class PacketHandler {
 
     private static final ByteBuffer PACKET_BUFFER = ByteBuffer.allocate(4096);
 
+    private static PacketHandler instance;
+
+    private PacketHandler() {
+
+    }
+
+    public static PacketHandler getInstance() {
+        if (instance == null)
+            instance = new PacketHandler();
+
+        return instance;
+    }
+
     public NetworkPacket createPacket(ByteBuffer buffer) {
         buffer.rewind();
         byte packetID = buffer.get();
@@ -45,7 +58,7 @@ public class PacketHandler {
     public ByteBuffer preparePacket(NetworkPacket packet) {
         PACKET_BUFFER.clear();
         PACKET_BUFFER.put(PacketType.getPacketID(packet));
-        PACKET_BUFFER.put(packet.getData());
+        PACKET_BUFFER.put(packet.getData().array());
         PACKET_BUFFER.put(EOT);
         PACKET_BUFFER.rewind();
         return PACKET_BUFFER;

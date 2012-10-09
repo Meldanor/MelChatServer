@@ -50,7 +50,7 @@ public class MessagePacket extends NetworkPacket {
         super(BUFFER_SIZE);
 
         // ONLY 450 CHARS PER MESSAGE
-        if (text.length() >= TEXT_SIZE) {
+        if (text.length() > TEXT_SIZE) {
             throw new TextToLargeException();
         }
 

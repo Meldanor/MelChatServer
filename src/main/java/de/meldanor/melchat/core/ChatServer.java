@@ -18,14 +18,12 @@
 
 package de.meldanor.melchat.core;
 
-import java.nio.charset.Charset;
+public class ChatServer {
 
-public class MelChatCore {
+    private int port;
 
-    public final static Charset CHARSET = Charset.forName("UTF-8");
-
-    public static void main(String[] args) {
-
+    public ChatServer(int port) {
+        this.port = port;
     }
 
 }
