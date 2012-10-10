@@ -59,7 +59,7 @@ public abstract class NetworkPacket {
      * 
      * @return ByteBuffer containing the byte string.
      */
-    public ByteBuffer getData() {
+    public final ByteBuffer getData() {
         packetBuffer.clear();
         return onGetData();
     }
@@ -79,7 +79,7 @@ public abstract class NetworkPacket {
      * @param buffer
      *            The Buffer containing the byte string
      */
-    public void extractData(ByteBuffer buffer) {
+    public final void extractData(ByteBuffer buffer) {
         onExtractData(buffer);
         buffer.clear();
     }
