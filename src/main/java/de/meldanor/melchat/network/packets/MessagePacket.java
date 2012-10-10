@@ -106,18 +106,25 @@ public class MessagePacket extends NetworkPacket {
         this.text = new String(bytes, 0, endOfString(bytes), MelChatCore.CHARSET);
     }
 
-    private int endOfString(byte[] bytes) {
-        // SENTINEL LOOP
-        bytes[bytes.length - 1] = ETX;
-        int i = 0;
-        while (bytes[i] != ETX)
-            ++i;
-        return i;
-    }
-
     @Override
     public String toString() {
         return "MessagePacket={Timestamp=" + timestamp + ";Sender=" + sender + ";Receiver=" + receiver + ";Text=" + text + "}";
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public String getReceiver() {
+        return receiver;
+    }
+
+    public String getText() {
+        return text;
+    }
+    
+    public long getTimestamp() {
+        return timestamp;
     }
 
 }

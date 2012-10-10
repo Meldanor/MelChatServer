@@ -16,7 +16,7 @@
  * along with MelChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.meldanor.melchat.network;
+package de.meldanor.melchat.packet;
 
 import java.nio.ByteBuffer;
 
@@ -25,6 +25,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import de.meldanor.melchat.exception.TextToLargeException;
+import de.meldanor.melchat.network.PacketHandler;
 import de.meldanor.melchat.network.packets.MessagePacket;
 import de.meldanor.melchat.network.packets.NetworkPacket;
 

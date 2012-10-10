@@ -23,7 +23,11 @@ import java.util.Map;
 
 public enum PacketType {
 
-    MESSAGE((byte) 1, MessagePacket.class);
+    // @formatter:off
+    MESSAGE((byte) 1, MessagePacket.class),
+    LOGIN((byte) 2, LoginPacket.class);
+    
+    // @formatter:on
 
     private Class<? extends NetworkPacket> clazz;
     private byte packedID;

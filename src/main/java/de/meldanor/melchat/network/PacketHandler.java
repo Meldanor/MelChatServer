@@ -20,6 +20,7 @@ package de.meldanor.melchat.network;
 
 import java.nio.ByteBuffer;
 
+import de.meldanor.melchat.network.packets.LoginPacket;
 import de.meldanor.melchat.network.packets.MessagePacket;
 import de.meldanor.melchat.network.packets.NetworkPacket;
 import de.meldanor.melchat.network.packets.PacketType;
@@ -49,6 +50,8 @@ public class PacketHandler {
         switch (packetID) {
             case 1 :
                 return new MessagePacket(buffer);
+            case 2 :
+                return new LoginPacket(buffer);
             default :
                 // UNKNOWN PACKET
                 return null;

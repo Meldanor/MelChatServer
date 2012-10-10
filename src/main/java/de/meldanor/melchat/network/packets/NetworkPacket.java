@@ -92,4 +92,13 @@ public abstract class NetworkPacket {
      */
     public abstract void onExtractData(ByteBuffer buffer);
 
+    protected final int endOfString(byte[] bytes) {
+        // SENTINEL LOOP
+        bytes[bytes.length - 1] = ETX;
+        int i = 0;
+        while (bytes[i] != ETX)
+            ++i;
+        return i;
+    }
+
 }
