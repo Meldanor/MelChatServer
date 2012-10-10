@@ -18,17 +18,29 @@
 
 package de.meldanor.melchat.core;
 
+import java.util.Scanner;
+
 public class ChatServer implements Runnable {
 
-    private int port;
+    private Scanner scanner;
 
-    public ChatServer(int port) {
-        this.port = port;
+    public boolean isRunning = true;
+
+    public ChatServer(Scanner scanner) {
+        System.out.println("Start Chat Server...");
+        this.scanner = scanner;
+
+        System.out.println("-----------------");
+        System.out.print("Enter a port for this server:");
+        int port = scanner.nextInt();
+        System.out.println("This server listens to the port " + port);
     }
 
     @Override
     public void run() {
+        while (isRunning) {
 
+        }
     }
 
 }

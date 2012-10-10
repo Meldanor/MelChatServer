@@ -18,10 +18,25 @@
 
 package de.meldanor.melchat.core;
 
+import java.util.Scanner;
+
 public class ChatClient implements Runnable {
+
+    private Scanner scanner;
+
+    public boolean isRunning = true;
+
+    public ChatClient(Scanner scanner) {
+        System.out.println("Start Chat Client...");
+        this.scanner = scanner;
+    }
 
     @Override
     public void run() {
+
+        while (isRunning) {
+
+        }
 
     }
 

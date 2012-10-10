@@ -37,20 +37,20 @@ public class MelChatCore {
         System.out.println();
 
         boolean menu = false;
+        Thread thread = null;
         do {
             System.out.println("(" + SERVER_OPTION + ") - Start chat server");
             System.out.println("(" + CLIENT_OPTION + ") - Start chat client");
-
+            System.out.print("Option: ");
             Scanner scanner = new Scanner(System.in);
-
             try {
                 int i = scanner.nextInt();
                 switch (i) {
                     case SERVER_OPTION :
-                        System.out.println("Start Server...");
+                        thread = new Thread(new ChatServer(scanner), "ServerThread");
                         break;
                     case CLIENT_OPTION :
-                        System.out.println("Start Client...");
+                        thread = new Thread(new ChatClient(scanner), "ClientThread");
                         break;
                     default :
                         System.out.println("Wrong input!");
@@ -59,13 +59,19 @@ public class MelChatCore {
                         break;
                 }
             } catch (InputMismatchException e) {
-                System.out.println("Wrong input!");
+                System.out.println("Wrong input! Please correct your input and try it again.");
                 System.out.println("---------------");
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
         } while (menu);
+
+        if (thread != null) {
+            thread.start();
+        } else {
+            System.out.println("Error! No Thread created!");
+        }
 
     }
 }
