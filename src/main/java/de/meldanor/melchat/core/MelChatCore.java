@@ -22,6 +22,9 @@ import java.nio.charset.Charset;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import de.meldanor.melchat.client.ChatClient;
+import de.meldanor.melchat.server.ChatServer;
+
 public class MelChatCore {
 
     public final static Charset CHARSET = Charset.forName("UTF-8");

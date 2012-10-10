@@ -16,7 +16,7 @@
  * along with MelChat.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.meldanor.melchat.core;
+package de.meldanor.melchat.client;
 
 import java.util.Scanner;
 
