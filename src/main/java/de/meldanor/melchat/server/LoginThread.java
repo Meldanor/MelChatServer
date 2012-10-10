@@ -18,9 +18,13 @@
 
 package de.meldanor.melchat.server;
 
+import java.io.BufferedInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 
+import de.meldanor.melchat.network.PacketHandler;
+import de.meldanor.melchat.network.packets.NetworkPacket;
 
 public class LoginThread implements Runnable {
 
@@ -32,6 +36,8 @@ public class LoginThread implements Runnable {
         this.socket = socket;
     }
 
+    private ByteBuffer buffer = ByteBuffer.allocate(4096);
+
     @Override
     public void run() {
         Socket client = null;
@@ -39,6 +45,11 @@ public class LoginThread implements Runnable {
             try {
                 client = socket.accept();
                 chatServer.addClient(client);
+                BufferedInputStream in = new BufferedInputStream(client.getInputStream());
+                in.read(buffer.array(), 0, buffer.limit());
+                NetworkPacket packet = PacketHandler.getInstance().createPacket(buffer);
+                System.out.println(packet);
+//                PacketHandler.getInstance().createPacket(ByteBuffer.wrap(in.read(b, off, len)))
             } catch (Exception e) {
                 e.printStackTrace();
             }

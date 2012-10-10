@@ -28,7 +28,6 @@ import java.util.Scanner;
 import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
-
 public class ChatServer implements Runnable {
 
     private Scanner scanner;
@@ -60,6 +59,7 @@ public class ChatServer implements Runnable {
         try {
             socket = new ServerSocket(port);
             loginThread = new Thread(new LoginThread(this, socket));
+            loginThread.start();
 
             timer = new Timer();
             timer.schedule(new PingThread(this), 0L, TimeUnit.SECONDS.toMillis(10));

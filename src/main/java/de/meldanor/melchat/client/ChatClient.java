@@ -18,7 +18,13 @@
 
 package de.meldanor.melchat.client;
 
+import java.io.BufferedOutputStream;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.util.Scanner;
+
+import de.meldanor.melchat.network.PacketHandler;
+import de.meldanor.melchat.network.packets.LoginPacket;
 
 public class ChatClient implements Runnable {
 
@@ -27,10 +33,38 @@ public class ChatClient implements Runnable {
     public boolean isRunning = true;
 
     public ChatClient(Scanner scanner) {
-        System.out.println("Start Chat Client...");
         this.scanner = scanner;
+        init();
+
     }
 
+    private void init() {
+        System.out.println("Start Chat Client...");
+
+        System.out.print("Serveraddress: ");
+        String host = scanner.next();
+
+        System.out.print("Serverport: ");
+        int port = scanner.nextInt();
+
+        System.out.print("Your Nickname:");
+        String nickname = scanner.next();
+
+        login(host, port, nickname);
+    }
+
+    private void login(String host, int port, String nickname) {
+        try {
+            System.out.println("Login startet...");
+            Socket socket = new Socket(InetAddress.getByName(host), port);
+            System.out.println("Schreibe LoginPacket...");
+            BufferedOutputStream out = new BufferedOutputStream(socket.getOutputStream());
+            socket.getOutputStream().write(PacketHandler.getInstance().preparePacket(new LoginPacket(nickname)).array());
+            System.out.println("Fertig!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     @Override
     public void run() {
 
