@@ -25,6 +25,8 @@ import java.util.Scanner;
 import de.meldanor.melchat.network.PacketHandler;
 import de.meldanor.melchat.network.packets.LoginPacket;
 import de.meldanor.melchat.network.packets.MessagePacket;
+import de.meldanor.melchat.network.packets.NetworkPacket;
+import de.meldanor.melchat.network.packets.PacketType;
 
 public class ChatClient implements Runnable {
 
@@ -35,6 +37,8 @@ public class ChatClient implements Runnable {
     private Socket socket;
 
     private String nickName;
+
+    private Thread listenThread;
 
     public ChatClient(Scanner scanner) {
         this.scanner = scanner;
@@ -54,10 +58,17 @@ public class ChatClient implements Runnable {
         System.out.print("Your Nickname:");
         String nickname = scanner.next();
 
-        login(host, port, nickname);
+        if (!login(host, port, nickname)) {
+            System.out.println("login failed!");
+            this.isRunning = false;
+            return;
+        }
+
+        this.listenThread = new Thread(new ListenThread(this));
+        this.listenThread.start();
     }
 
-    private void login(String host, int port, String nickName) {
+    private boolean login(String host, int port, String nickName) {
         try {
             System.out.println("Login startet...");
             socket = new Socket(InetAddress.getByName(host), port);
@@ -66,21 +77,32 @@ public class ChatClient implements Runnable {
             System.out.println("Fertig!");
 
             this.nickName = nickName;
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
-            this.isRunning = false;
+            return false;
         }
     }
 
     private void sendMessage(String text) {
         try {
-            System.out.println(text);
             socket.getOutputStream().write(PacketHandler.getInstance().preparePacket(new MessagePacket(nickName, "ALL", text)).array());
-
-            socket.getOutputStream().flush();
-            System.out.println(text);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public synchronized void handleIncomingPacket(NetworkPacket packet) {
+
+        byte packetID = PacketType.getPacketID(packet);
+        switch (packetID) {
+            case 1 :
+                MessagePacket messagePacket = (MessagePacket) packet;
+                System.out.println(messagePacket.getSender() + ": " + messagePacket.getText());
+                break;
+
+            default :
+
         }
     }
 
@@ -92,7 +114,6 @@ public class ChatClient implements Runnable {
 
             text = scanner.nextLine();
             if (text != null) {
-                System.out.println(text);
                 sendMessage(text);
             }
             try {
@@ -103,6 +124,7 @@ public class ChatClient implements Runnable {
             }
 
         }
+        listenThread.interrupt();
         if (socket != null) {
             try {
                 socket.close();
@@ -111,6 +133,10 @@ public class ChatClient implements Runnable {
             }
         }
 
+    }
+
+    public Socket getSocket() {
+        return socket;
     }
 
 }

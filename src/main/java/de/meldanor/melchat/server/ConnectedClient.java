@@ -66,9 +66,13 @@ public class ConnectedClient implements Runnable {
         while (socket != null && !socket.isClosed()) {
             buffer.clear();
             try {
-                socket.getInputStream().read(buffer.array(), 0, buffer.limit());
-                receivedPacket = PacketHandler.getInstance().createPacket(buffer);
-                this.server.handleReceivedPacket(receivedPacket, this);
+                if (!socket.isInputShutdown()) {
+                    socket.getInputStream().read(buffer.array(), 0, buffer.limit());
+                    receivedPacket = PacketHandler.getInstance().createPacket(buffer);
+                    this.server.handleReceivedPacket(receivedPacket, this);
+                } else {
+                    System.out.println("Input stream is down!");
+                }
             } catch (Exception e) {
                 System.out.println("Error while reading input stream!");
                 e.printStackTrace();
