@@ -103,6 +103,13 @@ public class ChatClient implements Runnable {
             }
 
         }
+        if (socket != null) {
+            try {
+                socket.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 
