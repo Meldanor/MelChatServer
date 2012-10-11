@@ -24,7 +24,7 @@ import java.net.Socket;
 import java.nio.ByteBuffer;
 
 import de.meldanor.melchat.network.PacketHandler;
-import de.meldanor.melchat.network.packets.NetworkPacket;
+import de.meldanor.melchat.network.packets.LoginPacket;
 
 public class LoginThread implements Runnable {
 
@@ -41,15 +41,23 @@ public class LoginThread implements Runnable {
     @Override
     public void run() {
         Socket client = null;
+        LoginPacket packet = null;
         while (true) {
             try {
                 client = socket.accept();
-                chatServer.addClient(client);
                 BufferedInputStream in = new BufferedInputStream(client.getInputStream());
                 in.read(buffer.array(), 0, buffer.limit());
-                NetworkPacket packet = PacketHandler.getInstance().createPacket(buffer);
+                try {
+                    packet = (LoginPacket) PacketHandler.getInstance().createPacket(buffer);
+                } catch (Exception ex) {
+                    System.out.println("Wrong packet! Disconnect client");
+                    ex.printStackTrace();
+                    client.close();
+                    continue;
+                }
+                chatServer.addClient(new ConnectedClient(packet.getClientName(), client));
+
                 System.out.println(packet);
-//                PacketHandler.getInstance().createPacket(ByteBuffer.wrap(in.read(b, off, len)))
             } catch (Exception e) {
                 e.printStackTrace();
             }

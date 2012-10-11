@@ -18,34 +18,30 @@
 
 package de.meldanor.melchat.server;
 
-import java.util.List;
-import java.util.TimerTask;
+import java.net.Socket;
 
-public class PingThread extends TimerTask {
+public class ConnectedClient {
 
-    /**
-     * Max Timeout is 5 seconds
-     */
-    private final static int TIMEOUT = 5000;
+    private String nickname;
+    private String address;
+    private Socket socket;
 
-    private ChatServer chatServer;
-
-    public PingThread(ChatServer chatServer) {
-        this.chatServer = chatServer;
+    public ConnectedClient(String nickname, Socket socket) {
+        this.nickname = nickname;
+        this.socket = socket;
+        this.address = this.socket.getInetAddress().toString();
     }
 
-    @Override
-    public void run() {
-        List<ConnectedClient> clients = chatServer.getClients();
-        try {
-            for (ConnectedClient client : clients) {
-                if (client.getSocket().isClosed() || !client.getSocket().getInetAddress().isReachable(TIMEOUT))
-                    chatServer.closeClient(client);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public String getNickname() {
+        return nickname;
+    }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public Socket getSocket() {
+        return socket;
     }
 
 }

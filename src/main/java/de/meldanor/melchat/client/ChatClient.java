@@ -18,7 +18,6 @@
 
 package de.meldanor.melchat.client;
 
-import java.io.BufferedOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Scanner;
@@ -58,7 +57,6 @@ public class ChatClient implements Runnable {
             System.out.println("Login startet...");
             Socket socket = new Socket(InetAddress.getByName(host), port);
             System.out.println("Schreibe LoginPacket...");
-            BufferedOutputStream out = new BufferedOutputStream(socket.getOutputStream());
             socket.getOutputStream().write(PacketHandler.getInstance().preparePacket(new LoginPacket(nickname)).array());
             System.out.println("Fertig!");
         } catch (Exception e) {

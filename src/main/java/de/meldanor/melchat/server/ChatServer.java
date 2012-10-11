@@ -18,9 +18,7 @@
 
 package de.meldanor.melchat.server;
 
-import java.net.InetAddress;
 import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,7 +38,7 @@ public class ChatServer implements Runnable {
 
     private ServerSocket socket;
 
-    private List<Socket> clients = Collections.synchronizedList(new ArrayList<Socket>(16));
+    private List<ConnectedClient> clients = Collections.synchronizedList(new ArrayList<ConnectedClient>(16));
 
     public ChatServer(Scanner scanner) {
         this.scanner = scanner;
@@ -69,26 +67,25 @@ public class ChatServer implements Runnable {
 
     }
 
-    public synchronized void addClient(Socket client) {
-        System.out.println("Client " + client.getInetAddress().toString() + " connected!");
+    public synchronized void addClient(ConnectedClient client) {
+        System.out.println("Client " + client.getNickname() + " with the address " + client.getAddress() + " connected!");
         clients.add(client);
     }
 
-    public synchronized void closeClient(Socket client) {
-        InetAddress address = client.getInetAddress();
-        if (!client.isClosed()) {
+    public synchronized void closeClient(ConnectedClient client) {
+        if (!client.getSocket().isClosed()) {
             try {
-                client.close();
+                client.getSocket().close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         clients.remove(client);
-        System.out.println("Client " + address + " timed out!");
+        System.out.println("Client " + client.getNickname() + " with the address " + client.getAddress() + " disconnected!");
     }
 
-    public List<Socket> getClients() {
-        return new ArrayList<Socket>(clients);
+    public List<ConnectedClient> getClients() {
+        return new ArrayList<ConnectedClient>(clients);
     }
 
     @Override
