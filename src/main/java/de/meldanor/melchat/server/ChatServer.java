@@ -26,7 +26,10 @@ import java.util.Scanner;
 import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
+import de.meldanor.melchat.exception.TextToLargeException;
+import de.meldanor.melchat.network.packets.MessagePacket;
 import de.meldanor.melchat.network.packets.NetworkPacket;
+import de.meldanor.melchat.network.packets.PacketType;
 
 public class ChatServer implements Runnable {
 
@@ -90,14 +93,45 @@ public class ChatServer implements Runnable {
         return new ArrayList<ConnectedClient>(clients);
     }
 
-    public void handleReceivedPacket(NetworkPacket packet, ConnectedClient receiver) {
+    public synchronized void handleReceivedPacket(NetworkPacket packet, ConnectedClient receiver) {
+        // GET PACKET TYPE
+        byte packetID = PacketType.getPacketID(packet);
 
+        // HANDLE DIFFERENT KINDS OF PACKETS
+        switch (packetID) {
+            case 1 :
+                MessagePacket messagePacket = (MessagePacket) packet;
+                broadcastMessage(messagePacket.getText(), messagePacket.getText());
+                break;
+        }
+    }
+
+    public void broadcastMessage(String message, String sender) {
+        // PREPARE PACKET
+        MessagePacket packet = null;
+        try {
+            packet = new MessagePacket(sender, "ALL", message);
+        } catch (TextToLargeException e1) {
+            System.out.println("Message to long! Length = " + message.length());
+            e1.printStackTrace();
+            return;
+        }
+
+        // SEND PACKET TO EVERY CLIENT
+        for (ConnectedClient client : clients) {
+            try {
+                client.sendPacket(packet);
+            } catch (Exception e) {
+                System.out.println("Can't send a message to client " + client.getNickname() + "!");
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
     public void run() {
         while (isRunning) {
-
+            // LISTENING TO EVERYTHING
         }
 
         try {
