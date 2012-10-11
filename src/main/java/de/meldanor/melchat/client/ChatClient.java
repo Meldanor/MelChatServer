@@ -24,12 +24,17 @@ import java.util.Scanner;
 
 import de.meldanor.melchat.network.PacketHandler;
 import de.meldanor.melchat.network.packets.LoginPacket;
+import de.meldanor.melchat.network.packets.MessagePacket;
 
 public class ChatClient implements Runnable {
 
     private Scanner scanner;
 
     public boolean isRunning = true;
+
+    private Socket socket;
+
+    private String nickName;
 
     public ChatClient(Scanner scanner) {
         this.scanner = scanner;
@@ -52,21 +57,50 @@ public class ChatClient implements Runnable {
         login(host, port, nickname);
     }
 
-    private void login(String host, int port, String nickname) {
+    private void login(String host, int port, String nickName) {
         try {
             System.out.println("Login startet...");
-            Socket socket = new Socket(InetAddress.getByName(host), port);
+            socket = new Socket(InetAddress.getByName(host), port);
             System.out.println("Schreibe LoginPacket...");
-            socket.getOutputStream().write(PacketHandler.getInstance().preparePacket(new LoginPacket(nickname)).array());
+            socket.getOutputStream().write(PacketHandler.getInstance().preparePacket(new LoginPacket(nickName)).array());
             System.out.println("Fertig!");
+
+            this.nickName = nickName;
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.isRunning = false;
+        }
+    }
+
+    private void sendMessage(String text) {
+        try {
+            System.out.println(text);
+            socket.getOutputStream().write(PacketHandler.getInstance().preparePacket(new MessagePacket(nickName, "ALL", text)).array());
+
+            socket.getOutputStream().flush();
+            System.out.println(text);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     @Override
     public void run() {
 
+        String text = null;
         while (isRunning) {
+
+            text = scanner.nextLine();
+            if (text != null) {
+                System.out.println(text);
+                sendMessage(text);
+            }
+            try {
+
+                Thread.sleep(1);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         }
 
