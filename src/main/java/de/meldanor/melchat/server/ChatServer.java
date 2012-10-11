@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Timer;
-import java.util.concurrent.TimeUnit;
 
 import de.meldanor.melchat.exception.TextToLargeException;
 import de.meldanor.melchat.network.packets.MessagePacket;
@@ -64,8 +63,8 @@ public class ChatServer implements Runnable {
             loginThread = new Thread(new LoginThread(this, socket));
             loginThread.start();
 
-            timer = new Timer();
-            timer.schedule(new PingThread(this), 0L, TimeUnit.SECONDS.toMillis(10));
+//            timer = new Timer();
+//            timer.schedule(new PingThread(this), 0L, TimeUnit.SECONDS.toMillis(10));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -74,6 +73,7 @@ public class ChatServer implements Runnable {
 
     public synchronized void addClient(ConnectedClient client) {
         System.out.println("Client " + client.getNickname() + " with the address " + client.getAddress() + " connected!");
+        new Thread(client).start();
         clients.add(client);
     }
 
@@ -101,7 +101,7 @@ public class ChatServer implements Runnable {
         switch (packetID) {
             case 1 :
                 MessagePacket messagePacket = (MessagePacket) packet;
-                broadcastMessage(messagePacket.getText(), messagePacket.getText());
+                broadcastMessage(messagePacket.getText(), messagePacket.getSender());
                 break;
         }
     }
@@ -117,6 +117,7 @@ public class ChatServer implements Runnable {
             return;
         }
 
+        System.out.println("Message from " + sender + ": " + message);
         // SEND PACKET TO EVERY CLIENT
         for (ConnectedClient client : clients) {
             try {

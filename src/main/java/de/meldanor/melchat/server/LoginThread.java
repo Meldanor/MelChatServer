@@ -18,7 +18,6 @@
 
 package de.meldanor.melchat.server;
 
-import java.io.BufferedInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
@@ -45,8 +44,7 @@ public class LoginThread implements Runnable {
         while (true) {
             try {
                 client = socket.accept();
-                BufferedInputStream in = new BufferedInputStream(client.getInputStream());
-                in.read(buffer.array(), 0, buffer.limit());
+                client.getInputStream().read(buffer.array(), 0, buffer.limit());
                 try {
                     packet = (LoginPacket) PacketHandler.getInstance().createPacket(buffer);
                 } catch (Exception ex) {
