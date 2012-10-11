@@ -106,7 +106,7 @@ public class ChatServer implements Runnable {
         }
     }
 
-    public void broadcastMessage(String message, String sender) {
+    public synchronized void broadcastMessage(String message, String sender) {
         // PREPARE PACKET
         MessagePacket packet = null;
         try {
@@ -132,6 +132,11 @@ public class ChatServer implements Runnable {
     public void run() {
         while (isRunning) {
             // LISTENING TO EVERYTHING
+            try {
+                Thread.sleep(1);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         try {
