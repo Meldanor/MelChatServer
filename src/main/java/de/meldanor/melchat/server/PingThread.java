@@ -24,9 +24,9 @@ import java.util.TimerTask;
 public class PingThread extends TimerTask {
 
     /**
-     * Max Timeout is 5 seconds
+     * Max Timeout is 30 seconds
      */
-    private final static int TIMEOUT = 5000;
+    private final static int TIMEOUT = 30000;
 
     private ChatServer chatServer;
 
