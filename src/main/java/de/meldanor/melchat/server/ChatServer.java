@@ -26,6 +26,8 @@ import java.util.Scanner;
 import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
+import de.meldanor.melchat.network.packets.NetworkPacket;
+
 public class ChatServer implements Runnable {
 
     private Scanner scanner;
@@ -86,6 +88,10 @@ public class ChatServer implements Runnable {
 
     public List<ConnectedClient> getClients() {
         return new ArrayList<ConnectedClient>(clients);
+    }
+
+    public void handleReceivedPacket(NetworkPacket packet, ConnectedClient receiver) {
+
     }
 
     @Override

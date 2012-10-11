@@ -55,7 +55,7 @@ public class LoginThread implements Runnable {
                     client.close();
                     continue;
                 }
-                chatServer.addClient(new ConnectedClient(packet.getClientName(), client));
+                chatServer.addClient(new ConnectedClient(packet.getClientName(), client, this.chatServer));
 
                 System.out.println(packet);
             } catch (Exception e) {

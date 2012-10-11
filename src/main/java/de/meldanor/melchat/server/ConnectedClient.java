@@ -19,17 +19,26 @@
 package de.meldanor.melchat.server;
 
 import java.net.Socket;
+import java.nio.ByteBuffer;
 
-public class ConnectedClient {
+import de.meldanor.melchat.network.PacketHandler;
+import de.meldanor.melchat.network.packets.NetworkPacket;
+
+public class ConnectedClient implements Runnable {
+
+    private ByteBuffer buffer = ByteBuffer.allocate(4096);
 
     private String nickname;
     private String address;
     private Socket socket;
 
-    public ConnectedClient(String nickname, Socket socket) {
+    private ChatServer server;
+
+    public ConnectedClient(String nickname, Socket socket, ChatServer server) {
         this.nickname = nickname;
         this.socket = socket;
         this.address = this.socket.getInetAddress().toString();
+        this.server = server;
     }
 
     public String getNickname() {
@@ -44,4 +53,26 @@ public class ConnectedClient {
         return socket;
     }
 
+    public void sendPacket(NetworkPacket packet) throws Exception {
+        // SEND THE PACKET TO THE STREAM
+        socket.getOutputStream().write(PacketHandler.getInstance().preparePacket(packet).array());
+    }
+
+    @Override
+    public void run() {
+
+        // READ PACKETS
+        NetworkPacket receivedPacket = null;
+        while (socket != null && !socket.isClosed()) {
+            buffer.clear();
+            try {
+                socket.getInputStream().read(buffer.array(), 0, buffer.limit());
+                receivedPacket = PacketHandler.getInstance().createPacket(buffer);
+                this.server.handleReceivedPacket(receivedPacket, this);
+            } catch (Exception e) {
+                System.out.println("Error while reading input stream!");
+                e.printStackTrace();
+            }
+        }
+    }
 }
