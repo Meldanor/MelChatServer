@@ -71,12 +71,12 @@ public class MessagePacket extends NetworkPacket {
         // WRITE SENDER
         packetBuffer.put(sender.getBytes(MelChatCore.CHARSET));
         packetBuffer.put(ETX);
-        pos = packetBuffer.position(pos + SENDER_SIZE + 2).position();
+        pos = packetBuffer.position(pos + SENDER_SIZE).position();
 
         // WRITE RECEIVER
         packetBuffer.put(receiver.getBytes(MelChatCore.CHARSET));
         packetBuffer.put(ETX);
-        pos = packetBuffer.position(pos + RECEIVER_SIZE + 2).position();
+        pos = packetBuffer.position(pos + RECEIVER_SIZE).position();
 
         // WIRTE TEXT
         packetBuffer.put(text.getBytes(MelChatCore.CHARSET));
@@ -90,19 +90,19 @@ public class MessagePacket extends NetworkPacket {
         // READ TIMESTAMPS
         this.timestamp = buffer.getLong();
 
-        byte[] bytes = new byte[SENDER_SIZE + 2 + 1];
+        byte[] bytes = new byte[SENDER_SIZE + ETX_LENGTH];
 
         // READ SENDER
-        buffer.get(bytes, 0, SENDER_SIZE + 2);
+        buffer.get(bytes, 0, SENDER_SIZE);
         this.sender = new String(bytes, 0, endOfString(bytes), MelChatCore.CHARSET);
 
         // READ RECEIVER
-        buffer.get(bytes, 0, RECEIVER_SIZE + 2);
+        buffer.get(bytes, 0, RECEIVER_SIZE);
         this.receiver = new String(bytes, 0, endOfString(bytes), MelChatCore.CHARSET);
 
         // READ TEXT
-        bytes = new byte[TEXT_SIZE + 2 + 1];
-        buffer.get(bytes, 0, TEXT_SIZE + 2);
+        bytes = new byte[TEXT_SIZE + ETX_LENGTH];
+        buffer.get(bytes, 0, TEXT_SIZE);
         this.text = new String(bytes, 0, endOfString(bytes), MelChatCore.CHARSET);
     }
 
@@ -122,7 +122,7 @@ public class MessagePacket extends NetworkPacket {
     public String getText() {
         return text;
     }
-    
+
     public long getTimestamp() {
         return timestamp;
     }

@@ -61,10 +61,10 @@ public class LoginPacket extends NetworkPacket {
         // READ TIMESTAMPS
         this.timestamp = buffer.getLong();
 
-        byte[] bytes = new byte[CLIENT_NAME_SIZE + 2 + 1];
+        byte[] bytes = new byte[CLIENT_NAME_SIZE + ETX_LENGTH];
 
         // READ SENDER
-        buffer.get(bytes, 0, CLIENT_NAME_SIZE + 2);
+        buffer.get(bytes, 0, CLIENT_NAME_SIZE);
         this.clientName = new String(bytes, 0, endOfString(bytes), MelChatCore.CHARSET);
     }
 

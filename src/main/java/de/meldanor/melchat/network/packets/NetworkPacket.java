@@ -27,6 +27,8 @@ public abstract class NetworkPacket {
      */
     public static final byte ETX = 3;
 
+    public static final byte ETX_LENGTH = 1;
+
     /**
      * Buffer per packet
      */
